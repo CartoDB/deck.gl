@@ -4,8 +4,7 @@ import {getMapTileJSON} from '../api/maps-api-client';
 const mapsApiProps = {
   version: '1.3.1', // MapConfig Version (Maps API)
   bufferSize: 1, // MVT buffersize in pixels,
-  extent: 4096, // Tile extent in tile coordinate space (MVT spec.)
-  simplifyExtent: 4096 // Simplify extent in tile coordinate space (MVT spec.)
+  extent: 4096 // Tile extent in tile coordinate space (MVT spec.)
 };
 
 const defaultProps = {
