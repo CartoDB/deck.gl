@@ -97,13 +97,6 @@ Optional. Tile extent in tile coordinate space as defined by MVT specification.
 * Default: `4096`
 
 
-##### `simplifyExtent` (String)
-
-Optional. Simplify extent in tile coordinate space as defined by MVT specification.
-
-* Default: `4096`
-
-
 ## Source
 
 [modules/carto/src/layers/carto-sql-layer.js](https://github.com/visgl/deck.gl/tree/master/modules/carto/src/layers/carto-sql-layer.js)
