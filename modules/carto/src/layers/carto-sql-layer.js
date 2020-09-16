@@ -9,7 +9,8 @@ const mapsApiProps = {
 
 const defaultProps = {
   ...mapsApiProps,
-  ...CartoLayer.defaultProps
+  ...CartoLayer.defaultProps,
+  uniqueIdProperty: 'cartodb_id'
 };
 
 export default class CartoSQLLayer extends CartoLayer {

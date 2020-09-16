@@ -76,7 +76,9 @@ function render() {
       pointRadiusScale: 2000,
       getRadius: f => 11 - f.properties.scalerank,
       getFillColor: [200, 0, 80, 180],
-      autoHighlight: true
+      autoHighlight: true,
+      highlightColor: [0, 0, 128, 128],
+      pickable: true
     }),
     new CartoBQTilerLayer({
       id: 'osm_buildings',
