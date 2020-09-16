@@ -25,7 +25,7 @@ export default class CartoLayer extends CompositeLayer {
   }
 
   onHover(info, pickingEvent) {
-    const [mvtLayer] =  this.getSubLayers();
+    const [mvtLayer] = this.getSubLayers();
     return mvtLayer ? mvtLayer.onHover(info, pickingEvent) : super.onHover(info, pickingEvent);
   }
 
