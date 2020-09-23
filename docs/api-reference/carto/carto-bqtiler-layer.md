@@ -72,6 +72,16 @@ Optional. Needed for highlighting a feature split across two or more tiles if no
 
 A string pointing to a tile attribute containing a unique identifier for features across tiles.
 
+##### `autoExtent` (Boolean)
+
+* Default: `false`
+
+Optional. When true, automatically fills the `extent` property to define the layer bounds using the information provided by the TileJSON metadata or `[-180, -90, 180, 90]` if it doesn't exist.
+
+Requires `extent` to be `null`.
+
+Note that setting `extent` or `autoExtent` will enable underzooming when `minZoom` is set in the layer (see [`extent` documentation](/docs/api-reference/geo-layers/tile-layer#extent)).
+
 
 ## Source
 

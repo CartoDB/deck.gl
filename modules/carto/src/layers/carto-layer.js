@@ -3,7 +3,8 @@ import {MVTLayer} from '@deck.gl/geo-layers';
 
 const defaultProps = {
   data: null,
-  credentials: null
+  credentials: null,
+  autoExtent: false
 };
 
 export default class CartoLayer extends CompositeLayer {
@@ -36,7 +37,11 @@ export default class CartoLayer extends CompositeLayer {
       this.props,
       this.getSubLayerProps({
         id: 'mvt',
-        data: this.state.tilejson.tiles
+        data: this.state.tilejson.tiles,
+        extent:
+          this.props.autoExtent && !this.props.extent
+            ? this.state.tilejson.bounds || [-180, -90, 180, 90]
+            : this.props.extent
       })
     );
   }
