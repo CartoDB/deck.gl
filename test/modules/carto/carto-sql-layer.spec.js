@@ -14,6 +14,12 @@ test('CartoSQLLayer', t => {
 });
 
 test('CartoSQLLayer#_updateTileJSON', t => {
+  class TestCartoSQLLayer extends CartoSQLLayer {
+    _updateTileJSON() {
+      // override internal method to avoid remote calls
+    }
+  }
+
   const testCases = [
     {
       spies: ['_updateTileJSON'],
@@ -52,6 +58,6 @@ test('CartoSQLLayer#_updateTileJSON', t => {
     }
   ];
 
-  testLayer({Layer: CartoSQLLayer, testCases, onError: t.notOk});
+  testLayer({Layer: TestCartoSQLLayer, testCases, onError: t.notOk});
   t.end();
 });

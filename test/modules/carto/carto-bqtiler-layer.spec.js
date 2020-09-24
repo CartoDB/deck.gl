@@ -14,6 +14,12 @@ test('CartoBQTilerLayer', t => {
 });
 
 test('CartoBQTilerLayer#_updateTileJSON', t => {
+  class TestCartoBQTilerLayer extends CartoBQTilerLayer {
+    _updateTileJSON() {
+      // override internal method to avoid remote calls
+    }
+  }
+
   const testCases = [
     {
       spies: ['_updateTileJSON'],
@@ -52,6 +58,6 @@ test('CartoBQTilerLayer#_updateTileJSON', t => {
     }
   ];
 
-  testLayer({Layer: CartoBQTilerLayer, testCases, onError: t.notOk});
+  testLayer({Layer: TestCartoBQTilerLayer, testCases, onError: t.notOk});
   t.end();
 });
