@@ -1,6 +1,7 @@
-import CartoLayer from './carto-layer';
+import CartoClassicLayer from './carto-classic-layer';
 import {getMapsVersion} from '../config';
-import { CONNECTIONS, MAP_TYPES} from '../api/maps-api-client';
+import {getTileJSON} from '../api/maps-api-carto-client'
+import {CONNECTIONS, MAP_TYPES} from '../api/types';
 
 const defaultProps = {
   bufferSize: 16, // MVT buffersize in pixels,
@@ -8,47 +9,58 @@ const defaultProps = {
   uniqueIdProperty: 'cartodb_id'
 };
 
-export default class CartoSQLLayer extends CartoLayer {
-  // async updateTileJSON() {
-  //   const {data, bufferSize, tileExtent, credentials} = this.props;
-  //   const version = getMapsVersion(credentials);
-  //   const isSQL = data.search(' ') > -1;
+export default class CartoSQLLayer extends CartoClassicLayer {
+  constructor(...args) {
+    super(...args);
+    this._displayDeprecationWarning();
+  }
 
-  //   switch (version) {
-  //     case 'v1':
-  //       const sql = isSQL ? data : `SELECT * FROM ${data}`;
+  _displayDeprecationWarning() {
+    if (this.props._showDeprecationWarning) {
+      console.warn('CARTO warning: CartoSQLLayer will be removed in the following deck.gl versions, and it is not recommended to use. Use CartoLayer instead.');
+    }
+  }
 
-  //       // Map config v1
-  //       const mapConfig = {
-  //         version: '1.3.1',
-  //         buffersize: {
-  //           mvt: bufferSize
-  //         },
-  //         layers: [
-  //           {
-  //             type: 'mapnik',
-  //             options: {
-  //               sql: sql.trim(),
-  //               vector_extent: tileExtent
-  //             }
-  //           }
-  //         ]
-  //       };
+  async updateTileJSON() {
+    const {data, bufferSize, tileExtent, credentials} = this.props;
+    const version = getMapsVersion(credentials);
+    const isSQL = data.search(' ') > -1;
 
-  //       return await getTileJSON({mapConfig, credentials});
+    switch (version) {
+      case 'v1':
+        const sql = isSQL ? data : `SELECT * FROM ${data}`;
 
-  //     case 'v2':
-  //       return await getTileJSON({
-  //         connection: CONNECTIONS.CARTO,
-  //         source: data,
-  //         type: isSQL ? MAP_TYPES.SQL : MAP_TYPES.TABLE,
-  //         credentials
-  //       });
+        // Map config v1
+        const mapConfig = {
+          version: '1.3.1',
+          buffersize: {
+            mvt: bufferSize
+          },
+          layers: [
+            {
+              type: 'mapnik',
+              options: {
+                sql: sql.trim(),
+                vector_extent: tileExtent
+              }
+            }
+          ]
+        };
 
-  //     default:
-  //       throw new Error(`Cannot build MapConfig for unmatching version ${version}`);
-  //   }
-  // }
+        return await getTileJSON({mapConfig, credentials});
+
+      case 'v2':
+        return await getTileJSON({
+          connection: CONNECTIONS.CARTO,
+          source: data,
+          type: isSQL ? MAP_TYPES.SQL : MAP_TYPES.TABLE,
+          credentials
+        });
+
+      default:
+        throw new Error(`Cannot build MapConfig for unmatching version ${version}`);
+    }
+  }
 }
 
 CartoSQLLayer.layerName = 'CartoSQLLayer';

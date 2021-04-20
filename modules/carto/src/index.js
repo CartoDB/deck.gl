@@ -1,4 +1,5 @@
 export {
+  setConfig,
   getDefaultCredentials,
   setDefaultCredentials,
   getMapsVersion as _getMapsVersion
@@ -12,4 +13,5 @@ export {default as colorCategories} from './style/color-categories-style';
 export {default as colorContinuous} from './style/color-continuous-style';
 // export {getTileJSON as _getTileJSON} from './api/maps-api-client';
 
-export { MAP_TYPES, PROVIDERS, FORMATS, getMap } from './api/maps-api-client'
+export { getMap } from './api/maps-api-carto-cloud-native-client'
+export { MAP_TYPES, PROVIDERS, FORMATS, CONNECTIONS } from './api/types'
