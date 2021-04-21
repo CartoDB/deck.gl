@@ -1,7 +1,7 @@
 import CartoClassicLayer from './carto-classic-layer';
 import {getMapsVersion} from '../config';
 import {getTileJSON} from '../api/maps-api-carto-client'
-import {CONNECTIONS, MAP_TYPES} from '../api/types';
+import {CONNECTIONS, MAP_TYPES} from '../api/constants';
 
 const defaultProps = {
   bufferSize: 16, // MVT buffersize in pixels,

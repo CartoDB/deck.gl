@@ -1,6 +1,6 @@
 import CartoClassicLayer from './carto-classic-layer';
 import {getTileJSON} from '../api/maps-api-carto-client';
-import {CONNECTIONS, MAP_TYPES} from '../api/types';
+import {CONNECTIONS, MAP_TYPES} from '../api/constants';
 
 export default class CartoBQTilerLayer extends CartoClassicLayer {
   constructor(...args) {

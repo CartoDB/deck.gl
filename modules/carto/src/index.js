@@ -14,4 +14,4 @@ export {default as colorContinuous} from './style/color-continuous-style';
 // export {getTileJSON as _getTileJSON} from './api/maps-api-client';
 
 export { getMap } from './api/maps-api-carto-cloud-native-client'
-export { MAP_TYPES, PROVIDERS, FORMATS, CONNECTIONS } from './api/types'
+export { MAP_TYPES, PROVIDERS, FORMATS, CONNECTIONS } from './api/constants'

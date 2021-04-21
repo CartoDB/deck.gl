@@ -54,7 +54,7 @@ export default class CartoClassicLayer extends CompositeLayer {
     return new MVTLayer(
       this.props,
       this.getSubLayerProps({
-        id: 'mvt',
+        id: 'classic',
         data: this.state.tilejson,
         updateTriggers
       })

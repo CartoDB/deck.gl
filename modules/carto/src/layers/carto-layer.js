@@ -4,36 +4,35 @@ import CartoSQLLayer from './carto-sql-layer'
 import CartoBQTilerLayer from './carto-bqtiler-layer';
 import CartoCloudNativeLayer from './carto-cloud-native-layer';
 import {getConfig, isModeAllowed, MODE_TYPES} from '../config';
-import {MAP_TYPES} from '../api/types';
+import {FORMATS, MAP_TYPES} from '../api/constants';
 
 const defaultProps = {
   ...CartoClassicLayer.defaultProps,
-  ...CartoCloudNativeLayer.defaultProps
+  ...CartoCloudNativeLayer.defaultProps,
+  format: FORMATS.GEOJSON
 };
 
 export default class CartoLayer extends CompositeLayer {
   renderLayers() {
-    const { mode, type } = this.props;
+    const { format, mode, type } = this.props;
 
-    const TargetLayerClass = getLayerByModeAndType({ mode, type });
-    const SubLayerClass = this.getSubLayerClass('carto-layer', TargetLayerClass);
+    const SubLayerClass = getLayerClassByModeAndType({ format, mode, type });
 
-    const layer = new SubLayerClass(
+    return new SubLayerClass(
       {...this.props},
       this.getSubLayerProps({
-        id: `carto-${SubLayerClass.layerName}`
-      }),{
+        id: 'carto'
+      }),
+      {
         _showDeprecationWarning: false
       }
     );
-
-    return layer;
   }
 }
 
-function getLayerByModeAndType({ mode, type }) {
+function getLayerClassByModeAndType({ format, mode, type }) {
   if (!isModeAllowed({ mode })) {
-    throw new Error('CARTO error: parameter mode is required'); 
+    throw new Error('CARTO error: parameter "mode" is required'); 
   }
 
   const config = getConfig();
@@ -43,7 +42,7 @@ function getLayerByModeAndType({ mode, type }) {
   }
 
   if (!type) {
-    throw new Error('CARTO error: parameter type is required');  
+    throw new Error('CARTO error: parameter "type" is required');  
   }
 
   if (mode === MODE_TYPES.CARTO) {
@@ -54,15 +53,21 @@ function getLayerByModeAndType({ mode, type }) {
       case MAP_TYPES.TILESET:
         return CartoBQTilerLayer;
       default:
-        throw new Error(`CARTO error: parameter type not recognized, use one of: ${Object.values(MAP_TYPES).toString()}`);
+        throw new Error(`CARTO error: parameter "type" not recognized, use one of: ${Object.values(MAP_TYPES).toString()}`);
     }
   }
 
   if (mode === MODE_TYPES.CARTO_CLOUD_NATIVE) {
+    const formatValues = Object.values(FORMATS);
+
+    if (!formatValues.includes(format)) {
+      throw new Error(`CARTO error: parameter "format" not recognized, use one of: ${formatValues.toString()}`);
+    }
+
     return CartoCloudNativeLayer;
   }
 
-  throw new Error(`CARTO error: parameter mode not recognized, use on of: ${Object.values(MODE_TYPES).toString()}`);;
+  throw new Error(`CARTO error: parameter "mode" not recognized, use on of: ${Object.values(MODE_TYPES).toString()}`);;
 }
 
 CartoLayer.layerName = 'CartoLayer';

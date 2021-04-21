@@ -1,6 +1,6 @@
 import {getConfig} from '../config';
 import {encodeParameter, request} from './utils';
-import {FORMATS} from './types'
+import {FORMATS} from './constants'
 
 /**
  * Build a URL with all required parameters

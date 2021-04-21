@@ -69,14 +69,18 @@ export default class CartoCloudNativeLayer extends CompositeLayer {
     const {data, SubLayer} = this.state;
     if (!data) return null;
 
-    const {updateTriggers} = this.props;
+    const {renderSubLayers, updateTriggers} = this.props;
     const props = {...this.props};
     delete props.data;
+
+    if (renderSubLayers) {
+      return SubLayer({ ...props, data })
+    }
 
     return new SubLayer(
       props,
       this.getSubLayerProps({
-        id: `carto-${SubLayer.layerName}`,
+        id: 'cloud-native',
         data,
         updateTriggers
       })
