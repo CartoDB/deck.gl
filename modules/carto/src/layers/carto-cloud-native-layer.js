@@ -40,7 +40,7 @@ export default class CartoCloudNativeLayer extends CompositeLayer {
         props.provider !== oldProps.provider ||
         props.connection !== oldProps.connection ||
         props.type !== oldProps.type ||
-        JSON.stringify(props.credentials) !== JSON.stringify(oldProps.credentials);
+        JSON.stringify(props.credentials) !== JSON.stringify(oldProps.credentials)
 
     if (shouldUpdateData) {
       this.setState({data: null, SubLayer: null});
@@ -65,16 +65,24 @@ export default class CartoCloudNativeLayer extends CompositeLayer {
     }
   }
 
+  renderSubLayers(props) {
+    return this.props.renderSubLayers(props);
+  }
+
   renderLayers() {
     const {data, SubLayer} = this.state;
     if (!data) return null;
 
     const {renderSubLayers, updateTriggers} = this.props;
-    const props = {...this.props};
+    const props = {...this.props};    
     delete props.data;
 
     if (renderSubLayers) {
-      return SubLayer({ ...props, data })
+      return this.renderSubLayers({
+        ...props,
+        id: 'cloud-native',
+        data
+      });
     }
 
     return new SubLayer(

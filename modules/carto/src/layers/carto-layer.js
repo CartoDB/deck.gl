@@ -21,11 +21,11 @@ export default class CartoLayer extends CompositeLayer {
     return new SubLayerClass(
       {...this.props},
       this.getSubLayerProps({
-        id: 'carto'
+        id: 'carto',
       }),
       {
         _showDeprecationWarning: false
-      }
+      },
     );
   }
 }
