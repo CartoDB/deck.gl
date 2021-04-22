@@ -36,11 +36,12 @@ export default class CartoCloudNativeLayer extends CompositeLayer {
   }
 
   updateState({props, oldProps, changeFlags}) {
-    const shouldUpdateData = changeFlags.dataChanged ||
-        props.provider !== oldProps.provider ||
-        props.connection !== oldProps.connection ||
-        props.type !== oldProps.type ||
-        JSON.stringify(props.credentials) !== JSON.stringify(oldProps.credentials)
+    const shouldUpdateData =
+      changeFlags.dataChanged ||
+      props.provider !== oldProps.provider ||
+      props.connection !== oldProps.connection ||
+      props.type !== oldProps.type ||
+      JSON.stringify(props.credentials) !== JSON.stringify(oldProps.credentials);
 
     if (shouldUpdateData) {
       this.setState({data: null, SubLayer: null});
@@ -51,8 +52,16 @@ export default class CartoCloudNativeLayer extends CompositeLayer {
   async _updateData() {
     try {
       const {provider, type, data: source, connection, credentials, format} = this.props;
-      const [data, mapFormat] = await getMap({provider, type, source, connection, credentials, format});
-      const SubLayer = this.state.SubLayer || this.props.renderSubLayers || getSublayerFromMapFormat(mapFormat);
+      const [data, mapFormat] = await getMap({
+        provider,
+        type,
+        source,
+        connection,
+        credentials,
+        format
+      });
+      const SubLayer =
+        this.state.SubLayer || this.props.renderSubLayers || getSublayerFromMapFormat(mapFormat);
 
       this.setState({SubLayer, data});
       this.props.onDataLoad(data);
@@ -74,7 +83,7 @@ export default class CartoCloudNativeLayer extends CompositeLayer {
     if (!data) return null;
 
     const {renderSubLayers, updateTriggers} = this.props;
-    const props = {...this.props};    
+    const props = {...this.props};
     delete props.data;
 
     if (renderSubLayers) {
@@ -97,7 +106,7 @@ export default class CartoCloudNativeLayer extends CompositeLayer {
 }
 
 function getSublayerFromMapFormat(format) {
-  switch(format) {
+  switch (format) {
     case 'tilejson':
       return MVTLayer;
     case 'geojson':

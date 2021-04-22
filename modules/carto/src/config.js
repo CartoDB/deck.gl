@@ -5,7 +5,7 @@ export const MODE_TYPES = Object.freeze({
 
 const CARTO_REQUIRED_PROPS = Object.freeze({
   username: 'username',
-  apiKey: 'apiKey',
+  apiKey: 'apiKey'
   // region: 'region'
 });
 
@@ -29,15 +29,31 @@ export function getConfig() {
 
 function checkConfigProps(opts) {
   if (!isModeAllowed(opts)) {
-    throw new Error(`CARTO config error: "mode" is required, use "${MODE_TYPES.CARTO}" or "${MODE_TYPES.CARTO_CLOUD_NATIVE}"`)
+    throw new Error(
+      `CARTO config error: "mode" is required, use "${MODE_TYPES.CARTO}" or "${
+        MODE_TYPES.CARTO_CLOUD_NATIVE
+      }"`
+    );
   }
 
   if (!arePropsAllowed(opts)) {
     if (opts.mode === MODE_TYPES.CARTO) {
-      throw new Error(`CARTO config error: "${MODE_TYPES.CARTO}" "mode" has the following required config props: ${Object.values(CARTO_REQUIRED_PROPS).toString()}`);
+      throw new Error(
+        `CARTO config error: "${
+          MODE_TYPES.CARTO
+        }" "mode" has the following required config props: ${Object.values(
+          CARTO_REQUIRED_PROPS
+        ).toString()}`
+      );
     }
-    
-    throw new Error(`CARTO config error: "${MODE_TYPES.CARTO_CLOUD_NATIVE}" "mode" has the following required config props: ${Object.values(CARTO_CLOUD_NATIVE_REQUIRED_PROPS).toString()}`);
+
+    throw new Error(
+      `CARTO config error: "${
+        MODE_TYPES.CARTO_CLOUD_NATIVE
+      }" "mode" has the following required config props: ${Object.values(
+        CARTO_CLOUD_NATIVE_REQUIRED_PROPS
+      ).toString()}`
+    );
   }
 }
 
@@ -59,8 +75,11 @@ function arePropsAllowed(opts) {
   if (opts.mode === MODE_TYPES.CARTO && !hasAllowedProps(CARTO_REQUIRED_PROPS, opts)) {
     return false;
   }
-  
-  if (opts.mode === MODE_TYPES.CARTO_CLOUD_NATIVE && !hasAllowedProps(CARTO_CLOUD_NATIVE_REQUIRED_PROPS, opts)) {
+
+  if (
+    opts.mode === MODE_TYPES.CARTO_CLOUD_NATIVE &&
+    !hasAllowedProps(CARTO_CLOUD_NATIVE_REQUIRED_PROPS, opts)
+  ) {
     return false;
   }
 
@@ -68,7 +87,7 @@ function arePropsAllowed(opts) {
 }
 
 function hasAllowedProps(obj1, obj2) {
-  return Object.keys(obj1).every((prop) => prop in obj2);
+  return Object.keys(obj1).every(prop => prop in obj2);
 }
 
 // setDefaultCredentials will be deprecated in following versions

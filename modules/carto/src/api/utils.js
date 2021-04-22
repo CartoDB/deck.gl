@@ -17,16 +17,16 @@ export async function request({url, credentials}) {
   } catch (error) {
     throw new Error(`Failed to connect to Maps API: ${error}`);
   }
-  
+
   const json = await response.json();
-  
+
   if (!response.ok) {
     dealWithError({response, json, credentials});
   }
-  
+
   return json;
 }
-  
+
 /**
  * Display proper message from Maps API error
  */
@@ -44,7 +44,7 @@ function dealWithError({response, json, credentials}) {
           credentials.apiKey
         }') doesn't provide access to the requested data`
       );
-  
+
     default:
       const e = getMapsVersion() === 'v1' ? JSON.stringify(json.errors) : json.error;
       throw new Error(e);

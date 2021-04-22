@@ -10,7 +10,10 @@ export default class CartoBQTilerLayer extends CartoClassicLayer {
 
   _displayDeprecationWarning() {
     if (this.props._showDeprecationWarning) {
-      console.warn('CARTO warning: CartoBQTilerLayer will be removed in the following deck.gl versions, and it is not recommended to use. Use CartoLayer instead.');
+      // eslint-disable-next-line
+      console.warn(
+        'CARTO warning: CartoBQTilerLayer will be removed in the following deck.gl versions, and it is not recommended to use. Use CartoLayer instead.'
+      );
     }
   }
 

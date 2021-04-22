@@ -53,4 +53,3 @@ function mapsUrl(credentials) {
     .replace(DEFAULT_USER_COMPONENT_IN_URL, credentials.username)
     .replace(DEFAULT_REGION_COMPONENT_IN_URL, credentials.region);
 }
-

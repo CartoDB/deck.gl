@@ -1,6 +1,6 @@
 import {CompositeLayer} from '@deck.gl/core';
 import CartoClassicLayer from './carto-classic-layer';
-import CartoSQLLayer from './carto-sql-layer'
+import CartoSQLLayer from './carto-sql-layer';
 import CartoBQTilerLayer from './carto-bqtiler-layer';
 import CartoCloudNativeLayer from './carto-cloud-native-layer';
 import {getConfig, isModeAllowed, MODE_TYPES} from '../config';
@@ -14,35 +14,39 @@ const defaultProps = {
 
 export default class CartoLayer extends CompositeLayer {
   renderLayers() {
-    const { format, mode, type } = this.props;
+    const {format, mode, type} = this.props;
 
-    const SubLayerClass = getLayerClassByModeAndType({ format, mode, type });
+    const SubLayerClass = getLayerClassByModeAndType({format, mode, type});
 
     return new SubLayerClass(
       {...this.props},
       this.getSubLayerProps({
-        id: 'carto',
+        id: 'carto'
       }),
       {
         _showDeprecationWarning: false
-      },
+      }
     );
   }
 }
 
-function getLayerClassByModeAndType({ format, mode, type }) {
-  if (!isModeAllowed({ mode })) {
-    throw new Error('CARTO error: parameter "mode" is required'); 
+function getLayerClassByModeAndType({format, mode, type}) {
+  if (!isModeAllowed({mode})) {
+    throw new Error('CARTO error: parameter "mode" is required');
   }
 
   const config = getConfig();
 
   if (config.mode !== mode) {
-    throw new Error(`CARTO error: setConfig "mode" parameter needs to be equal to CartoLayer "mode" property, use one of: ${Object.values(MODE_TYPES).toString()}`);  
+    throw new Error(
+      `CARTO error: setConfig "mode" parameter needs to be equal to CartoLayer "mode" property, use one of: ${Object.values(
+        MODE_TYPES
+      ).toString()}`
+    );
   }
 
   if (!type) {
-    throw new Error('CARTO error: parameter "type" is required');  
+    throw new Error('CARTO error: parameter "type" is required');
   }
 
   if (mode === MODE_TYPES.CARTO) {
@@ -53,7 +57,11 @@ function getLayerClassByModeAndType({ format, mode, type }) {
       case MAP_TYPES.TILESET:
         return CartoBQTilerLayer;
       default:
-        throw new Error(`CARTO error: parameter "type" not recognized, use one of: ${Object.values(MAP_TYPES).toString()}`);
+        throw new Error(
+          `CARTO error: parameter "type" not recognized, use one of: ${Object.values(
+            MAP_TYPES
+          ).toString()}`
+        );
     }
   }
 
@@ -61,13 +69,19 @@ function getLayerClassByModeAndType({ format, mode, type }) {
     const formatValues = Object.values(FORMATS);
 
     if (!formatValues.includes(format)) {
-      throw new Error(`CARTO error: parameter "format" not recognized, use one of: ${formatValues.toString()}`);
+      throw new Error(
+        `CARTO error: parameter "format" not recognized, use one of: ${formatValues.toString()}`
+      );
     }
 
     return CartoCloudNativeLayer;
   }
 
-  throw new Error(`CARTO error: parameter "mode" not recognized, use on of: ${Object.values(MODE_TYPES).toString()}`);;
+  throw new Error(
+    `CARTO error: parameter "mode" not recognized, use on of: ${Object.values(
+      MODE_TYPES
+    ).toString()}`
+  );
 }
 
 CartoLayer.layerName = 'CartoLayer';
