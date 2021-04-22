@@ -9,7 +9,9 @@ import {FORMATS, MAP_TYPES} from '../api/constants';
 const defaultProps = {
   ...CartoClassicLayer.defaultProps,
   ...CartoCloudNativeLayer.defaultProps,
-  format: FORMATS.GEOJSON
+  format: FORMATS.GEOJSON,
+  mode: MODE_TYPES.CARTO_CLOUD_NATIVE,
+  type: MAP_TYPES.SQL
 };
 
 export default class CartoLayer extends CompositeLayer {
@@ -19,13 +21,11 @@ export default class CartoLayer extends CompositeLayer {
     const SubLayerClass = getLayerClassByModeAndType({format, mode, type});
 
     return new SubLayerClass(
-      {...this.props},
-      this.getSubLayerProps({
-        id: 'carto'
-      }),
-      {
-        _showDeprecationWarning: false
-      }
+      Object.assign(
+        {_showDeprecationWarning: false},
+        this.props,
+        this.getSubLayerProps({id: 'carto'})
+      )
     );
   }
 }
