@@ -1,5 +1,5 @@
 import test from 'tape-catch';
-import {testLayer, generateLayerTests} from '@deck.gl/test-utils';
+import {generateLayerTests, testLayer} from '@deck.gl/test-utils';
 import {
   setConfig,
   CartoLayer,
@@ -31,8 +31,7 @@ test('CartoLayer', t => {
     onBeforeUpdate: ({testCase}) => t.comment(testCase.title)
   });
 
-  testLayer({Layer: CartoLayer, testCases, onError: t.notOk});
-
+  testLayer({Layer: CartoBQTilerLayer, testCases, onError: t.notOk});
   t.end();
 });
 
@@ -83,7 +82,7 @@ test('should render a CartoSQLLayer as sublayer', t => {
   t.end();
 });
 
-test.only('should render a CartoBQTilerLayer as sublayer', t => {
+test('should render a CartoBQTilerLayer as sublayer', t => {
   const testCases = [
     {
       props: {
@@ -91,7 +90,7 @@ test.only('should render a CartoBQTilerLayer as sublayer', t => {
         type: 'tileset'
       },
       onBeforeUpdate: () => {
-        setCartoConfig({isCloudNative: true});
+        setCartoConfig({isCloudNative: false});
       },
       onAfterUpdate: ({subLayer}) => {
         if (subLayer) {

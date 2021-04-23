@@ -1,16 +1,15 @@
-import {CompositeLayer} from '@deck.gl/core';
+import {CompositeLayer, log} from '@deck.gl/core';
 import CartoClassicLayer from './carto-classic-layer';
 import CartoSQLLayer from './carto-sql-layer';
 import CartoBQTilerLayer from './carto-bqtiler-layer';
 import CartoCloudNativeLayer from './carto-cloud-native-layer';
 import {getConfig, isModeAllowed, MODE_TYPES} from '../config';
 import {FORMATS, MAP_TYPES} from '../api/constants';
-import {log} from '@deck.gl/core';
 
 const defaultProps = {
   ...CartoClassicLayer.defaultProps,
   ...CartoCloudNativeLayer.defaultProps,
-  format: null,
+  format: FORMATS.GEOJSON,
   mode: null,
   type: null
 };
@@ -36,23 +35,18 @@ export default class CartoLayer extends CompositeLayer {
 }
 
 function getLayerClassByModeAndType({format, mode, type}) {
-  if (!isModeAllowed({mode})) {
-    log.assert('CARTO error: parameter "mode" is required');
-  }
+  log.assert(isModeAllowed({mode}), 'CARTO error: parameter "mode" is required');
 
   const config = getConfig();
 
-  if (config.mode !== mode) {
-    log.assert(
-      `CARTO error: setConfig "mode" parameter needs to be equal to CartoLayer "mode" property, use one of: ${Object.values(
-        MODE_TYPES
-      ).toString()}`
-    );
-  }
+  log.assert(
+    config.mode === mode,
+    `CARTO error: setConfig "mode" parameter needs to be equal to CartoLayer "mode" property, use one of: ${Object.values(
+      MODE_TYPES
+    ).toString()}`
+  );
 
-  if (!type) {
-    log.assert('CARTO error: parameter "type" is required');
-  }
+  log.assert(type, 'CARTO error: parameter "type" is required');
 
   if (mode === MODE_TYPES.CARTO) {
     switch (type) {
@@ -63,6 +57,7 @@ function getLayerClassByModeAndType({format, mode, type}) {
         return CartoBQTilerLayer;
       default:
         log.assert(
+          false,
           `CARTO error: parameter "type" not recognized, use one of: ${Object.values(
             MAP_TYPES
           ).toString()}`
@@ -73,16 +68,16 @@ function getLayerClassByModeAndType({format, mode, type}) {
   if (mode === MODE_TYPES.CARTO_CLOUD_NATIVE) {
     const formatValues = Object.values(FORMATS);
 
-    if (!formatValues.includes(format)) {
-      log.assert(
-        `CARTO error: parameter "format" not recognized, use one of: ${formatValues.toString()}`
-      );
-    }
+    log.assert(
+      formatValues.includes(format),
+      `CARTO error: parameter "format" not recognized, use one of: ${formatValues.toString()}`
+    );
 
     return CartoCloudNativeLayer;
   }
 
   log.assert(
+    false,
     `CARTO error: parameter "mode" not recognized, use on of: ${Object.values(
       MODE_TYPES
     ).toString()}`
