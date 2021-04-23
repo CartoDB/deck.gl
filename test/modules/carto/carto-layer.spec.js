@@ -1,26 +1,108 @@
 import test from 'tape-catch';
 import {testLayer, generateLayerTests} from '@deck.gl/test-utils';
-import {setConfig, CartoLayer} from '@deck.gl/carto';
+import {
+  setConfig,
+  CartoLayer,
+  CartoSQLLayer,
+  CartoBQTilerLayer,
+  _CartoCloudNativeLayer
+} from '@deck.gl/carto';
 
-test.only('CartoLayer', t => {
-  setConfig({
-    mode: 'carto-cloud-native',
-    tenant: 'whatever-tenant',
-    accessToken: 'whatever-token'
-  });
+function setCartoConfig({isCloudNative}) {
+  if (isCloudNative) {
+    setConfig({
+      mode: 'carto-cloud-native',
+      tenant: 'whatever-tenant',
+      accessToken: 'whatever-access-token'
+    });
+  } else {
+    setConfig({
+      mode: 'carto',
+      username: 'whatever-user-name',
+      apiKey: 'whatever-api-key'
+    });
+  }
+}
 
+test('CartoLayer', t => {
   const testCases = generateLayerTests({
     Layer: CartoLayer,
-    sampleProps: {
-      mode: 'carto-cloud-native',
-      type: 'sql'
-    },
     assert: t.ok,
-    onBeforeUpdate: ({testCase}) => t.comment(testCase.title),
-    onAfterUpdate: ({layer, subLayer}) => {
-      t.ok(subLayer, 'subLayers rendered');
-    }
+    onBeforeUpdate: ({testCase}) => t.comment(testCase.title)
   });
+
+  testLayer({Layer: CartoLayer, testCases, onError: t.notOk});
+
+  t.end();
+});
+
+test('should render a CartoCloudNativeLayer as sublayer', t => {
+  const testCases = [
+    {
+      props: {
+        mode: 'carto-cloud-native',
+        type: 'sql'
+      },
+      onBeforeUpdate: () => {
+        setCartoConfig({isCloudNative: true});
+      },
+      onAfterUpdate: ({subLayer}) => {
+        t.ok(
+          subLayer instanceof _CartoCloudNativeLayer,
+          'subLayer should be a CartoCloudNativeLayer layer'
+        );
+      }
+    }
+  ];
+
+  testLayer({Layer: CartoLayer, testCases, onError: t.notOk});
+
+  t.end();
+});
+
+test('should render a CartoSQLLayer as sublayer', t => {
+  const testCases = [
+    {
+      props: {
+        mode: 'carto',
+        type: 'sql'
+      },
+      onBeforeUpdate: () => {
+        setCartoConfig({isCloudNative: false});
+      },
+      onAfterUpdate: ({subLayer}) => {
+        if (subLayer) {
+          t.ok(subLayer instanceof CartoSQLLayer, 'subLayer should be a CartoSQLLayer layer');
+        }
+      }
+    }
+  ];
+
+  testLayer({Layer: CartoLayer, testCases, onError: t.notOk});
+
+  t.end();
+});
+
+test.only('should render a CartoBQTilerLayer as sublayer', t => {
+  const testCases = [
+    {
+      props: {
+        mode: 'carto',
+        type: 'tileset'
+      },
+      onBeforeUpdate: () => {
+        setCartoConfig({isCloudNative: true});
+      },
+      onAfterUpdate: ({subLayer}) => {
+        if (subLayer) {
+          t.ok(
+            subLayer instanceof CartoBQTilerLayer,
+            'subLayer should be a CartoBQTilerLayer layer'
+          );
+        }
+      }
+    }
+  ];
 
   testLayer({Layer: CartoLayer, testCases, onError: t.notOk});
 

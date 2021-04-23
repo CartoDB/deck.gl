@@ -10,20 +10,6 @@ const defaultProps = {
 };
 
 export default class CartoSQLLayer extends CartoClassicLayer {
-  constructor(...args) {
-    super(...args);
-    this._displayDeprecationWarning();
-  }
-
-  _displayDeprecationWarning() {
-    if (this.props._showDeprecationWarning) {
-      // eslint-disable-next-line
-      console.warn(
-        'CARTO warning: CartoSQLLayer will be removed in the following deck.gl versions, and it is not recommended to use. Use CartoLayer instead.'
-      );
-    }
-  }
-
   async updateTileJSON() {
     const {data, bufferSize, tileExtent, credentials} = this.props;
     const version = getMapsVersion(credentials);

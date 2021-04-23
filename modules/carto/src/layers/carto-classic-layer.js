@@ -15,6 +15,13 @@ export default class CartoClassicLayer extends CompositeLayer {
     this.state = {
       tilejson: null
     };
+
+    if (this.props._showDeprecationWarning) {
+      // eslint-disable-next-line
+      console.warn(
+        'CARTO warning: CartoSQLLayer and CartoBQTilerLayer will be removed in the following deck.gl versions, and they are not recommended to use. Use CartoLayer instead.'
+      );
+    }
   }
 
   get isLoaded() {
