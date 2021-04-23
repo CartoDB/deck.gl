@@ -16,8 +16,6 @@ const defaultProps = {
 };
 
 export default class CartoLayer extends CompositeLayer {
-  _getLayerClassByModeAndType({format, mode, type}) {}
-
   renderLayers() {
     const {format, mode, type} = this.props;
 
