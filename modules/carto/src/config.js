@@ -1,3 +1,5 @@
+import {log} from '@deck.gl/core';
+
 export const MODE_TYPES = Object.freeze({
   CARTO: 'carto',
   CARTO_CLOUD_NATIVE: 'carto-cloud-native'
@@ -28,17 +30,17 @@ export function getConfig() {
 }
 
 function checkConfigProps(opts) {
-  if (!isModeAllowed(opts)) {
-    throw new Error(
-      `CARTO config error: "mode" is required, use "${MODE_TYPES.CARTO}" or "${
-        MODE_TYPES.CARTO_CLOUD_NATIVE
-      }"`
-    );
-  }
+  log.assert(
+    isModeAllowed(opts),
+    `CARTO config error: "mode" is required, use "${MODE_TYPES.CARTO}" or "${
+      MODE_TYPES.CARTO_CLOUD_NATIVE
+    }"`
+  );
 
   if (!arePropsAllowed(opts)) {
     if (opts.mode === MODE_TYPES.CARTO) {
-      throw new Error(
+      log.assert(
+        opts.mode !== MODE_TYPES.CARTO,
         `CARTO config error: "${
           MODE_TYPES.CARTO
         }" "mode" has the following required config props: ${Object.values(
@@ -47,7 +49,8 @@ function checkConfigProps(opts) {
       );
     }
 
-    throw new Error(
+    log.assert(
+      false,
       `CARTO config error: "${
         MODE_TYPES.CARTO_CLOUD_NATIVE
       }" "mode" has the following required config props: ${Object.values(

@@ -1,6 +1,11 @@
 import {getConfig} from '../config';
 import {encodeParameter, request} from './utils';
-import {FORMATS} from './constants';
+import {FORMATS, MAP_TYPES} from './constants';
+
+/**
+ * Threshold to use GET requests, vs POST
+ */
+const REQUEST_GET_MAX_URL_LENGTH = 2048;
 
 /**
  * Build a URL with all required parameters
@@ -22,8 +27,8 @@ function buildURL({provider, type, source, connection, credentials, format}) {
 
 async function getMapMetadata({provider, type, source, connection, credentials}) {
   const url = buildURL({provider, type, source, connection, credentials});
-
-  return await request({url, credentials});
+  const isPost = source.length > REQUEST_GET_MAX_URL_LENGTH && type === MAP_TYPES.SQL;
+  return await request({url, credentials, source, connection, isPost});
 }
 
 function getUrlFromMetadata(metadata) {

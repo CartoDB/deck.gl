@@ -1,19 +1,47 @@
 import {getMapsVersion} from '../config';
 
 /**
+ * Simple GET request
+ */
+function getRequest(url) {
+  // eslint-disable-next-line no-undef
+  return new Request(url, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json'
+    }
+  });
+}
+
+/**
+ * Simple POST request
+ */
+function postRequest(url, accessToken, payload) {
+  // eslint-disable-next-line no-undef
+  return new Request(url, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`
+    },
+    body: JSON.stringify(payload)
+  });
+}
+
+/**
  * Request against Maps API
  */
-export async function request({url, credentials}) {
+export async function request({url, credentials, source, connection, isPost = false}) {
   let response;
 
   try {
     /* global fetch */
     /* eslint no-undef: "error" */
-    response = await fetch(url, {
-      headers: {
-        Accept: 'application/json'
-      }
-    });
+    const requestMethod = isPost
+      ? postRequest(url, credentials.accessToken, {source, connection})
+      : getRequest(url);
+    response = await fetch(requestMethod);
   } catch (error) {
     throw new Error(`Failed to connect to Maps API: ${error}`);
   }

@@ -4,21 +4,21 @@ import CartoSQLLayer from './carto-sql-layer';
 import CartoBQTilerLayer from './carto-bqtiler-layer';
 import CartoCloudNativeLayer from './carto-cloud-native-layer';
 import {getConfig, isModeAllowed, MODE_TYPES} from '../config';
-import {FORMATS, MAP_TYPES} from '../api/constants';
+import {MAP_TYPES} from '../api/constants';
 
 const defaultProps = {
   ...CartoClassicLayer.defaultProps,
   ...CartoCloudNativeLayer.defaultProps,
-  format: FORMATS.GEOJSON,
+  format: null,
   mode: null,
   type: null
 };
 
 export default class CartoLayer extends CompositeLayer {
   renderLayers() {
-    const {format, mode, type} = this.props;
+    const {mode, type} = this.props;
 
-    const SubLayerClass = getLayerClassByModeAndType({format, mode, type});
+    const SubLayerClass = getLayerClassByModeAndType({mode, type});
 
     if (SubLayerClass) {
       return new SubLayerClass(
@@ -34,7 +34,7 @@ export default class CartoLayer extends CompositeLayer {
   }
 }
 
-function getLayerClassByModeAndType({format, mode, type}) {
+function getLayerClassByModeAndType({mode, type}) {
   log.assert(isModeAllowed({mode}), 'CARTO error: parameter "mode" is required');
 
   const config = getConfig();
@@ -66,12 +66,11 @@ function getLayerClassByModeAndType({format, mode, type}) {
   }
 
   if (mode === MODE_TYPES.CARTO_CLOUD_NATIVE) {
-    const formatValues = Object.values(FORMATS);
-
-    log.assert(
-      formatValues.includes(format),
-      `CARTO error: parameter "format" not recognized, use one of: ${formatValues.toString()}`
-    );
+    // const formatValues = Object.values(FORMATS);
+    // log.assert(
+    //   formatValues.includes(format),
+    //   `CARTO error: parameter "format" not recognized, use one of: ${formatValues.toString()}`
+    // );
 
     return CartoCloudNativeLayer;
   }
