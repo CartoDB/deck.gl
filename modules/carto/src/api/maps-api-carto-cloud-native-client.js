@@ -27,7 +27,7 @@ function buildURL({provider, type, source, connection, credentials, format}) {
 
 async function getMapMetadata({provider, type, source, connection, credentials}) {
   const url = buildURL({provider, type, source, connection, credentials});
-  const isPost = source.length > REQUEST_GET_MAX_URL_LENGTH && type === MAP_TYPES.SQL;
+  const isPost = url.length > REQUEST_GET_MAX_URL_LENGTH && type === MAP_TYPES.SQL;
   return await request({url, credentials, source, connection, isPost});
 }
 
